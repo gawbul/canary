@@ -1,0 +1,50 @@
+    1  cd canary-demo/
+    2  ls
+    3  helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+    4  helm repo update
+    5  minikube start
+    6  minikube addons enable ingress
+    7  kubectl create namespace canary-demo
+    8  helm install prometheus prometheus-community/kube-prometheus-stack -n canary-demo
+    9  helm install canary-demo ./canary-demo -n canary-demo
+   10  kubectl get pods -n canary-demo && kubectl get services -n canary-demo && kubectl get ingress -n canary-demo
+   11  kubectl port-forward svc/canary-demo 8080:80 -n canary-demo & kubectl port-forward svc/canary-demo-canary 8081:80 -n canary-demo & kubectl port-forward -n ingress-nginx service/ingress-nginx-controller 8082:80 & kubectl port-forward svc/prometheus-grafana 3000:80 -n canary-demo & kubectl port-forward svc/prometheus-operated 9090:9090 -n canary-demo &
+   12  for i in {1..20}; do curl -H "Host: canary-demo.local" localhost:8082; done
+   13  python ./tests/test_app.py
+   14  helm upgrade canary-demo ./canary-demo -n canary-demo
+   15  for i in {1..20}; do curl -H "Host: canary-demo.local" localhost:8082; done
+   16  python ./tests/test_app.py
+   17  helm history canary-demo -n canary-demo
+   18  helm rollback canary-demo 1 -n canary-demo
+   19  for i in {1..20}; do curl -H "Host: canary-demo.local" localhost:8082; done
+   20  python ./tests/test_app.py
+   21  helm list -a -n canary-demo
+   22  helm history upcommerce -n canary-demo
+   23  helm history canary-demo -n canary-demo
+   24  helm ls -n canary-demo
+   25  helm status canary-demo -n canary-demo
+   26  python compute_error_budget.py
+   27  kubectl get pods -n canary-demo && kubectl get services -n canary-demo && kubectl get ingress -n canary-demo
+   28  kubectl port-forward svc/canary-demo-canary 8081:80
+   29  kubectl port-forward svc/canary-demo-canary 8081:80 -n canary-demo
+   30  bg
+   31  helm upgrade canary-demo ./canary-demo -n canary-demo
+   32  helm ls -n canary-demo
+   33  helm history canary-demo -n canary-demo
+   34  time helm rollback canary-demo 1 -n canary-demo
+   35  kubectl get pods -n canary-demo
+   36  kubctl logs -n canary-demo prometheus-prometheus-kube-prometheus-prometheus-0
+   37  kubectl logs -n canary-demo prometheus-prometheus-kube-prometheus-prometheus-0
+   38  kubectl get servicemonitors.monitoring.coreos.com -n canary-demo 
+   39  kubectl describe servicemonitors.monitoring.coreos.com -n canary-demo canary-demo-main-servicemonitor
+   40  kubectl get pods -n canary-demo
+   41  kubectl logs -n canary-demo prometheus-kube-state-metrics-7457555cf7-2k27m
+   42  kubectl logs -n canary-demo canary-demo-canary-54c9f8f4b8-j58v4
+   43  kubectl get prometheuses.monitoring.coreos.com --all-namespaces -o jsonpath="{.items[*].spec.serviceMonitorSelector}"
+   44  kubectl get prometheuses.monitoring.coreos.com --all-namespaces -o jsonpath="{.items[*].spec.serviceMonitorNamespaceSelector}"
+   45  kubectl edit -n canary-demo prometheuses.monitoring.coreos.com 
+   46  kubectl get prometheuses.monitoring.coreos.com --all-namespaces -o jsonpath="{.items[*].spec.serviceMonitorSelector}"
+   47  for i in {1..20}; do curl -H "Host: canary-demo.local" localhost:8082; done
+   48  kubectl get prometheuses.monitoring.coreos.com --all-namespaces -o jsonpath="{.items[*].spec.serviceMonitorSelector}"
+   49  history 
+   50  history > ../history.txt
